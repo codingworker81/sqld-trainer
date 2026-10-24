@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { getSettings, saveSettings, type ThemeSetting } from '../db';
 
-export type ThemeSetting = 'light' | 'dark' | 'system';
+export type { ThemeSetting };
 
 interface ThemeContextValue {
   theme: ThemeSetting;
@@ -15,11 +16,22 @@ function resolveIsDark(theme: ThemeSetting, prefersDark: boolean): boolean {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  // Stage 1: in-memory only. Persisted to Dexie settings from Stage 4 onward.
-  const [theme, setTheme] = useState<ThemeSetting>('system');
+  // Stage 4: 설정은 Dexie(settings 테이블)에 저장된다. 로드 전까지는
+  // 기본값(system)으로 렌더링하고, 불러온 뒤 실제 값으로 갱신한다.
+  const [theme, setThemeState] = useState<ThemeSetting>('system');
   const [prefersDark, setPrefersDark] = useState(
     () => window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false,
   );
+
+  useEffect(() => {
+    let cancelled = false;
+    getSettings().then((settings) => {
+      if (!cancelled) setThemeState(settings.theme);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-color-scheme: dark)');
@@ -31,6 +43,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', resolveIsDark(theme, prefersDark));
   }, [theme, prefersDark]);
+
+  const setTheme = (next: ThemeSetting) => {
+    setThemeState(next);
+    void saveSettings({ theme: next });
+  };
 
   const value = useMemo(() => ({ theme, setTheme }), [theme]);
 
