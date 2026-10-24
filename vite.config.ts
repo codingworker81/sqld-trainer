@@ -21,6 +21,7 @@ export default defineConfig({
         short_name: 'SQLD암기',
         description: 'SQLD 2과목 SQL 문법을 간격 반복으로 암기하는 개인용 학습 앱',
         lang: 'ko',
+        id: base,
         display: 'standalone',
         start_url: base,
         scope: base,
