@@ -1,0 +1,21 @@
+[
+  { "id": "u01", "no": 1, "title": "SELECT 기본과 실행 순서", "weight": "high", "expectedCardCount": 15, "summaryFile": "u01.md" },
+  { "id": "u02", "no": 2, "title": "연산자", "weight": "high", "expectedCardCount": 25, "summaryFile": "u02.md" },
+  { "id": "u03", "no": 3, "title": "단일행 함수", "weight": "high", "expectedCardCount": 70, "summaryFile": "u03.md" },
+  { "id": "u04", "no": 4, "title": "집계 함수와 GROUP BY/HAVING", "weight": "high", "expectedCardCount": 20, "summaryFile": "u04.md" },
+  { "id": "u05", "no": 5, "title": "조인", "weight": "high", "expectedCardCount": 25, "summaryFile": "u05.md" },
+  { "id": "u06", "no": 6, "title": "서브쿼리", "weight": "high", "expectedCardCount": 25, "summaryFile": "u06.md" },
+  { "id": "u07", "no": 7, "title": "집합 연산자", "weight": "mid", "expectedCardCount": 10, "summaryFile": "u07.md" },
+  { "id": "u08", "no": 8, "title": "그룹 함수", "weight": "high", "expectedCardCount": 20, "summaryFile": "u08.md" },
+  { "id": "u09", "no": 9, "title": "윈도우 함수", "weight": "high", "expectedCardCount": 35, "summaryFile": "u09.md" },
+  { "id": "u10", "no": 10, "title": "Top-N 쿼리", "weight": "mid", "expectedCardCount": 10, "summaryFile": "u10.md" },
+  { "id": "u11", "no": 11, "title": "계층형 질의", "weight": "high", "expectedCardCount": 20, "summaryFile": "u11.md" },
+  { "id": "u12", "no": 12, "title": "PIVOT / UNPIVOT", "weight": "mid", "expectedCardCount": 8, "summaryFile": "u12.md" },
+  { "id": "u13", "no": 13, "title": "정규 표현식 함수", "weight": "mid", "expectedCardCount": 10, "summaryFile": "u13.md" },
+  { "id": "u14", "no": 14, "title": "DML", "weight": "high", "expectedCardCount": 20, "summaryFile": "u14.md" },
+  { "id": "u15", "no": 15, "title": "TCL", "weight": "mid", "expectedCardCount": 12, "summaryFile": "u15.md" },
+  { "id": "u16", "no": 16, "title": "DDL과 제약조건", "weight": "mid", "expectedCardCount": 25, "summaryFile": "u16.md" },
+  { "id": "u17", "no": 17, "title": "DCL", "weight": "mid", "expectedCardCount": 10, "summaryFile": "u17.md" },
+  { "id": "u18", "no": 18, "title": "SQL 명령어 분류", "weight": "low", "expectedCardCount": 5, "summaryFile": "u18.md" },
+  { "id": "u19", "no": 19, "title": "정규식 메타문자", "weight": "mid", "expectedCardCount": 55, "summaryFile": "u19.md" }
+]

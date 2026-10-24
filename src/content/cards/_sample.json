@@ -1,0 +1,104 @@
+[
+  {
+    "id": "u03-sample-001",
+    "unitId": "u03",
+    "type": "definition",
+    "front": "NULLIF(expr1, expr2)의 정의는?",
+    "back": "expr1 = expr2이면 NULL, 다르면 expr1을 반환한다.",
+    "explanation": "두 값이 같을 때 NULL로 치환하고 싶을 때 쓴다.",
+    "tags": ["oracle"],
+    "verified": true
+  },
+  {
+    "id": "u03-sample-002",
+    "unitId": "u03",
+    "type": "predict",
+    "front": "SELECT SUBSTR('ABCDEF', -3, 2) FROM DUAL;",
+    "back": "'DE'",
+    "explanation": "시작 위치가 음수이면 뒤에서부터 센다. 뒤에서 3번째 'D'부터 2글자.",
+    "tags": ["oracle"],
+    "verified": true
+  },
+  {
+    "id": "u03-sample-003",
+    "unitId": "u03",
+    "type": "predict",
+    "front": "SELECT TRUNC(123.456, 1) FROM DUAL;",
+    "back": "123.4",
+    "explanation": "TRUNC는 반올림 없이 지정한 자리에서 버린다.",
+    "tags": ["oracle"],
+    "verified": true
+  },
+  {
+    "id": "u01-sample-001",
+    "unitId": "u01",
+    "type": "cloze",
+    "front": "SELECT 문의 논리적 실행 순서에서 WHERE는 ___ 보다 먼저 실행된다.",
+    "back": "GROUP BY",
+    "explanation": "실행 순서: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY.",
+    "tags": [],
+    "verified": true
+  },
+  {
+    "id": "u02-sample-001",
+    "unitId": "u02",
+    "type": "ox",
+    "front": "WHERE deptno NOT IN (10, NULL) 은 deptno가 10이 아닌 행을 조회한다.",
+    "answer": "X",
+    "explanation": "NOT IN 목록에 NULL이 있으면 모든 비교가 UNKNOWN이 되어 결과가 0건이다.",
+    "tags": ["trap"],
+    "verified": true
+  },
+  {
+    "id": "u03-sample-004",
+    "unitId": "u03",
+    "type": "ox",
+    "front": "DECODE 함수는 NULL과 NULL을 같다고 비교한다.",
+    "answer": "O",
+    "explanation": "DECODE는 NULL=NULL을 참으로 취급하는 유일한 비교 함수다. CASE는 그렇지 않다.",
+    "tags": ["trap"],
+    "verified": true
+  },
+  {
+    "id": "u03-sample-005",
+    "unitId": "u03",
+    "type": "choice",
+    "front": "ROUND(1250, -2)의 결과는?",
+    "choices": ["1200", "1300", "1250", "1000"],
+    "answer": "2",
+    "explanation": "음수 자릿수는 정수부에서 반올림한다. 1250을 백의 자리에서 반올림하면 1300.",
+    "tags": ["oracle"],
+    "verified": true
+  },
+  {
+    "id": "u01-sample-002",
+    "unitId": "u01",
+    "type": "order",
+    "front": "다음 절을 SELECT 문의 논리적 실행 순서대로 배열하시오.",
+    "items": ["FROM", "WHERE", "GROUP BY", "HAVING", "SELECT"],
+    "answer": [0, 1, 2, 3, 4],
+    "explanation": "FROM → WHERE → GROUP BY → HAVING → SELECT 순으로 실행된다.",
+    "tags": [],
+    "verified": true
+  },
+  {
+    "id": "u14-sample-001",
+    "unitId": "u14",
+    "type": "dbms",
+    "front": "Oracle의 NVL 함수는 SQL Server에서 어떤 함수에 대응하는가?",
+    "back": "ISNULL",
+    "explanation": "NVL(expr1, expr2) ↔ ISNULL(expr1, expr2), 둘 다 NULL일 때 대체값을 반환한다.",
+    "tags": ["mssql"],
+    "verified": true
+  },
+  {
+    "id": "u16-sample-001",
+    "unitId": "u16",
+    "type": "definition",
+    "front": "UNIQUE 제약조건의 NULL 허용 여부는?",
+    "back": "NULL을 허용한다. NULL끼리는 서로 같다고 비교되지 않으므로 여러 행이 NULL이어도 유일성 위반이 아니다.",
+    "explanation": "PRIMARY KEY와 달리 UNIQUE는 NOT NULL을 포함하지 않는다.",
+    "tags": ["trap"],
+    "verified": true
+  }
+]

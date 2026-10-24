@@ -9,12 +9,15 @@
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "eslint .",
-    "icons:generate": "node scripts/generate-icons.mjs"
+    "icons:generate": "node scripts/generate-icons.mjs",
+    "validate:content": "tsx scripts/validate-content.ts",
+    "prebuild": "npm run validate:content"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.28.0"
+    "react-router-dom": "^6.28.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
@@ -33,6 +36,7 @@
     "prettier": "^3.3.3",
     "tailwindcss": "^4.0.0",
     "typescript": "~5.6.3",
+    "tsx": "^4.19.2",
     "typescript-eslint": "^8.15.0",
     "vite": "^5.4.11",
     "vite-plugin-pwa": "^0.21.0",
