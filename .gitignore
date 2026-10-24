@@ -1,0 +1,9 @@
+# Reference materials kept local only — never commit (copyright)
+*.pdf
+주요메타문자.jpg
+
+# Node / build (for later stages)
+node_modules/
+dist/
+.vite/
+*.local
