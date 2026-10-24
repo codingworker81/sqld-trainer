@@ -5,6 +5,10 @@ import App from './App';
 import { ThemeProvider } from './app/ThemeProvider';
 import './index.css';
 
+// Ask the browser not to evict our storage under pressure (PRD 12절).
+// Unsupported browsers (e.g. iOS Safari) just skip this silently.
+navigator.storage?.persist?.().catch(() => {});
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
