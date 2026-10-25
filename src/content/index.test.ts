@@ -22,8 +22,9 @@ describe('content loader', () => {
 
   it('excludes _sample.json from shipped content', () => {
     // _sample.json is a validator fixture, not real card content, so the
-    // loader (and the glob it relies on) must skip it.
-    expect(getAllCards()).toHaveLength(0);
-    expect(getCardsByUnit('u03')).toHaveLength(0);
+    // loader (and the glob it relies on) must skip its ids even though
+    // real uXX.json files (Stage 7) now ship alongside it.
+    const ids = getAllCards().map((c) => c.id);
+    expect(ids).not.toContain('u03-sample-001');
   });
 });
