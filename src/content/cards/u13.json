@@ -1,0 +1,12 @@
+[
+  { "id": "u13-def-001", "unitId": "u13", "type": "definition", "front": "REGEXP_LIKE 함수는 어떤 역할을 하는가?", "back": "정규식 패턴과 일치하는지를 참/거짓으로 판단하는 조건식으로, 주로 WHERE절에서 사용한다.", "tags": [], "verified": false },
+  { "id": "u13-def-002", "unitId": "u13", "type": "definition", "front": "REGEXP_ 계열 함수가 LIKE 연산자보다 강력한 이유는?", "back": "LIKE는 %, _ 두 가지 와일드카드만 지원하지만, REGEXP_ 계열은 정규식 메타문자를 활용해 훨씬 복잡한 패턴 매칭이 가능하다.", "tags": [], "verified": false },
+  { "id": "u13-ox-001", "unitId": "u13", "type": "ox", "front": "REGEXP_LIKE는 WHERE절에서 조건식으로 사용할 수 있다.", "answer": "O", "tags": [], "verified": false },
+  { "id": "u13-ox-002", "unitId": "u13", "type": "ox", "front": "REGEXP_COUNT는 패턴과 일치하는 부분 문자열을 다른 문자열로 치환한다.", "answer": "X", "explanation": "치환은 REGEXP_REPLACE의 역할이다. REGEXP_COUNT는 패턴과 일치하는 횟수를 반환한다.", "tags": ["trap"], "verified": false },
+  { "id": "u13-pred-001", "unitId": "u13", "type": "predict", "front": "SELECT CASE WHEN REGEXP_LIKE('abc123', '^[a-z]+[0-9]+$') THEN 'TRUE' ELSE 'FALSE' END FROM DUAL;", "back": "TRUE", "explanation": "'abc123'은 소문자들 뒤에 숫자들이 오는 패턴과 처음부터 끝까지 일치하므로 TRUE다.", "tags": ["oracle"], "verified": false },
+  { "id": "u13-pred-002", "unitId": "u13", "type": "predict", "front": "SELECT REGEXP_REPLACE('010-1234-5678', '[0-9]+', '*') FROM DUAL;", "back": "*-*-*", "explanation": "REGEXP_REPLACE는 기본적으로 모든 매칭 부분을 치환한다. 숫자 덩어리 3곳(010, 1234, 5678)이 각각 '*'로 바뀐다.", "tags": ["oracle"], "verified": false },
+  { "id": "u13-pred-003", "unitId": "u13", "type": "predict", "front": "SELECT REGEXP_INSTR('abc123def', '[0-9]+') FROM DUAL;", "back": "4", "explanation": "숫자 패턴이 처음 매칭되는 위치는 네 번째 문자('1')이므로 4를 반환한다.", "tags": ["oracle"], "verified": false },
+  { "id": "u13-pred-004", "unitId": "u13", "type": "predict", "front": "SELECT REGEXP_SUBSTR('abc123def456', '[0-9]+') FROM DUAL;", "back": "123", "explanation": "occurrence 기본값 1이므로 처음 매칭되는 숫자 덩어리 '123'을 추출한다.", "tags": ["oracle"], "verified": false },
+  { "id": "u13-cloze-001", "unitId": "u13", "type": "cloze", "front": "REGEXP_COUNT(문자열, 패턴)은 패턴과 일치하는 ___를 반환한다.", "back": "횟수", "tags": [], "verified": false },
+  { "id": "u13-choice-001", "unitId": "u13", "type": "choice", "front": "다음 중 패턴이 매칭된 시작 위치를 반환하는 함수는?", "choices": ["REGEXP_LIKE", "REGEXP_REPLACE", "REGEXP_INSTR", "REGEXP_COUNT"], "answer": "3", "tags": [], "verified": false }
+]
