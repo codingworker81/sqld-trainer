@@ -1,0 +1,10 @@
+[
+  { "id": "u12-piv-001", "unitId": "u12", "type": "definition", "front": "PIVOT은 무엇을 하는가?", "back": "행 값을 컬럼으로 회전시킨다.", "tags": [], "verified": false },
+  { "id": "u12-piv-002", "unitId": "u12", "type": "definition", "front": "UNPIVOT은 무엇을 하는가?", "back": "PIVOT의 반대로, 컬럼을 행으로 회전시킨다.", "tags": [], "verified": false },
+  { "id": "u12-piv-003", "unitId": "u12", "type": "ox", "front": "PIVOT은 PIVOT절에 쓰이지 않은 나머지 컬럼을 기준으로 암묵적으로 GROUP BY를 수행한다.", "answer": "O", "tags": ["trap"], "verified": false },
+  { "id": "u12-piv-004", "unitId": "u12", "type": "ox", "front": "PIVOT을 쓰려면 반드시 명시적으로 GROUP BY를 함께 써야 한다.", "answer": "X", "explanation": "PIVOT은 명시적 GROUP BY 없이도 나머지 컬럼 기준으로 자동 그룹화한다.", "tags": ["trap"], "verified": false },
+  { "id": "u12-piv-005", "unitId": "u12", "type": "predict", "front": "SELECT * FROM (\n  SELECT deptno, job, sal FROM (\n    SELECT 10 deptno, 'CLERK' job, 100 sal FROM DUAL UNION ALL\n    SELECT 10 deptno, 'CLERK' job, 200 sal FROM DUAL UNION ALL\n    SELECT 10 deptno, 'MANAGER' job, 300 sal FROM DUAL\n  )\n)\nPIVOT (\n  SUM(sal) FOR job IN ('CLERK' AS clerk, 'MANAGER' AS manager)\n);", "back": "10, 300, 300", "explanation": "deptno=10 기준으로 묶여 CLERK 합계(100+200=300)와 MANAGER 합계(300)가 각각 컬럼이 된다.", "tags": ["oracle", "trap"], "verified": false },
+  { "id": "u12-piv-006", "unitId": "u12", "type": "cloze", "front": "PIVOT (SUM(sal) FOR job IN (...)) 에서 FOR 뒤에 오는 컬럼의 값들은 새로운 ___으로 회전된다.", "back": "컬럼", "tags": [], "verified": false },
+  { "id": "u12-piv-007", "unitId": "u12", "type": "choice", "front": "다음 중 PIVOT에 대한 설명으로 틀린 것은?", "choices": ["행 값을 컬럼으로 회전시킨다", "나머지 컬럼 기준으로 암묵적 GROUP BY가 일어난다", "집계 함수와 함께 쓴다", "명시적으로 GROUP BY절을 꼭 써야 한다"], "answer": "4", "tags": ["trap"], "verified": false },
+  { "id": "u12-piv-008", "unitId": "u12", "type": "ox", "front": "PIVOT과 UNPIVOT은 서로 반대 방향의 연산이다.", "answer": "O", "tags": [], "verified": false }
+]
