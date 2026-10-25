@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getUnits, getSummary, getAllCards, getCardsByUnit } from './index';
+import { getUnits, getSummary, getAllCards } from './index';
 
 describe('content loader', () => {
   it('loads all 19 units from units.json', () => {
