@@ -1,0 +1,12 @@
+[
+  { "id": "u17-def-001", "unitId": "u17", "type": "definition", "front": "GRANT와 REVOKE는 각각 무엇을 하는 명령인가?", "back": "GRANT는 권한(객체 권한·시스템 권한)을 부여하고, REVOKE는 부여한 권한을 회수한다.", "tags": [], "verified": false },
+  { "id": "u17-def-002", "unitId": "u17", "type": "definition", "front": "ROLE은 무엇인가?", "back": "여러 권한을 하나로 묶어서 한 번에 부여하거나 회수할 수 있게 해주는 권한 그룹이다.", "tags": [], "verified": false },
+  { "id": "u17-def-003", "unitId": "u17", "type": "definition", "front": "객체 권한과 시스템 권한은 각각 무엇을 대상으로 하는가?", "back": "객체 권한은 특정 테이블·뷰 등 객체에 대한 권한(SELECT, INSERT 등)이고, 시스템 권한은 데이터베이스 차원의 권한(세션 생성, CREATE TABLE 등)이다.", "tags": [], "verified": false },
+  { "id": "u17-ox-001", "unitId": "u17", "type": "ox", "front": "WITH GRANT OPTION으로 받은 객체 권한을 다른 사람에게 재부여한 뒤, 원 권한자가 REVOKE하면 재부여된 권한도 연쇄적으로(cascade) 회수된다.", "answer": "O", "tags": ["trap"], "verified": false },
+  { "id": "u17-ox-002", "unitId": "u17", "type": "ox", "front": "WITH ADMIN OPTION으로 받은 롤(시스템 권한)을 다른 사람에게 재부여한 뒤, 원 권한자가 REVOKE해도 재부여된 권한은 연쇄적으로 회수되지 않고 그대로 유지된다.", "answer": "O", "tags": ["trap"], "verified": false },
+  { "id": "u17-choice-001", "unitId": "u17", "type": "choice", "front": "REVOKE 시 재부여된 권한까지 연쇄적으로(cascade) 함께 회수되는 경우는?", "choices": ["WITH GRANT OPTION으로 부여된 객체 권한", "WITH ADMIN OPTION으로 부여된 롤/시스템 권한", "둘 다 연쇄 회수된다", "둘 다 연쇄 회수되지 않는다"], "answer": "1", "tags": ["trap"], "verified": false },
+  { "id": "u17-cloze-001", "unitId": "u17", "type": "cloze", "front": "객체 권한을 받은 사람이 그 권한을 다른 사람에게 다시 부여할 수 있게 하려면 GRANT 문에 ___ 를 추가한다.", "back": "WITH GRANT OPTION", "tags": [], "verified": false },
+  { "id": "u17-cloze-002", "unitId": "u17", "type": "cloze", "front": "시스템 권한이나 롤을 받은 사람이 그것을 다른 사람에게 다시 부여할 수 있게 하려면 GRANT 문에 ___ 를 추가한다.", "back": "WITH ADMIN OPTION", "tags": [], "verified": false },
+  { "id": "u17-pred-001", "unitId": "u17", "type": "predict", "front": "A가 B에게 WITH GRANT OPTION으로 SELECT 권한을 부여했고, B가 이 권한을 다시 C에게 부여했다. 이후 A가 B의 SELECT 권한을 REVOKE하면 C의 권한은 어떻게 되는가?", "back": "C의 권한도 함께 회수된다(cascade).", "tags": ["oracle", "trap"], "verified": false },
+  { "id": "u17-pred-002", "unitId": "u17", "type": "predict", "front": "A가 B에게 WITH ADMIN OPTION으로 롤을 부여했고, B가 이 롤을 다시 C에게 부여했다. 이후 A가 B의 롤을 REVOKE하면 C의 권한은 어떻게 되는가?", "back": "C의 권한은 그대로 유지된다(연쇄 회수되지 않는다).", "tags": ["oracle", "trap"], "verified": false }
+]
