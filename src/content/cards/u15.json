@@ -1,0 +1,14 @@
+[
+  { "id": "u15-def-001", "unitId": "u15", "type": "definition", "front": "COMMIT은 어떤 역할을 하는가?", "back": "트랜잭션에서 지금까지 변경한 내용을 영구적으로 데이터베이스에 반영한다.", "tags": [], "verified": false },
+  { "id": "u15-def-002", "unitId": "u15", "type": "definition", "front": "SAVEPOINT는 어떤 역할을 하는가?", "back": "트랜잭션 중간에 이름을 지정해 되돌아갈 수 있는 지점을 표시한다.", "tags": [], "verified": false },
+  { "id": "u15-ox-001", "unitId": "u15", "type": "ox", "front": "ROLLBACK TO SAVEPOINT 이름을 실행하면 해당 세이브포인트 이후의 변경 사항만 취소되고, 그 이전 변경 사항은 유지된다.", "answer": "O", "tags": [], "verified": false },
+  { "id": "u15-ox-002", "unitId": "u15", "type": "ox", "front": "CREATE, ALTER, DROP, TRUNCATE 같은 DDL 문은 실행되는 순간 그 전에 대기 중이던 DML을 포함해 암묵적으로 COMMIT한다.", "answer": "O", "tags": ["trap"], "verified": false },
+  { "id": "u15-ox-003", "unitId": "u15", "type": "ox", "front": "SQL Server는 기본적으로 각 문장을 실행할 때마다 자동으로 커밋(autocommit)된다.", "answer": "O", "tags": ["mssql"], "verified": false },
+  { "id": "u15-pred-001", "unitId": "u15", "type": "predict", "front": "트랜잭션에서 INSERT 문을 실행하고 COMMIT을 하지 않은 상태에서 곧바로 CREATE TABLE 문을 실행하면, 이전의 INSERT는 어떻게 되는가?", "back": "암묵적으로 COMMIT되어 영구 반영된다.", "explanation": "DDL 문은 실행되는 순간 그 이전의 대기 중인 DML을 포함해 암묵적으로 COMMIT시킨다.", "tags": ["oracle", "trap"], "verified": false },
+  { "id": "u15-pred-002", "unitId": "u15", "type": "predict", "front": "SAVEPOINT sp1을 지정한 후 UPDATE 문을 실행하고, 이어서 ROLLBACK TO SAVEPOINT sp1을 실행하면 그 UPDATE는 어떻게 되는가?", "back": "취소된다(sp1을 지정한 시점의 상태로 되돌아간다).", "tags": ["oracle"], "verified": false },
+  { "id": "u15-pred-003", "unitId": "u15", "type": "predict", "front": "SAVEPOINT sp1 지정 후 UPDATE 실행, 다시 SAVEPOINT sp2 지정 후 DELETE를 실행한 상태에서 ROLLBACK TO SAVEPOINT sp1을 실행하면 UPDATE와 DELETE는 각각 어떻게 되는가?", "back": "UPDATE와 DELETE 모두 취소된다.", "explanation": "더 이전의 세이브포인트로 롤백하면 그 뒤에 지정된 세이브포인트(sp2)와 그 이후의 모든 변경 사항이 함께 취소된다.", "tags": ["oracle", "trap"], "verified": false },
+  { "id": "u15-cloze-001", "unitId": "u15", "type": "cloze", "front": "ACID 중 A(Atomicity)는 트랜잭션의 작업이 전부 반영되거나 전부 반영되지 않아야 하는 ___을 의미한다.", "back": "원자성", "tags": [], "verified": false },
+  { "id": "u15-choice-001", "unitId": "u15", "type": "choice", "front": "ACID 중, 트랜잭션이 완료되면 그 결과가 영구적으로 저장되어 시스템 장애에도 유지되어야 한다는 성질은?", "choices": ["원자성(Atomicity)", "일관성(Consistency)", "고립성(Isolation)", "지속성(Durability)"], "answer": "4", "tags": [], "verified": false },
+  { "id": "u15-order-001", "unitId": "u15", "type": "order", "front": "다음을 트랜잭션 처리의 일반적인 순서대로 배열하시오.", "items": ["DML 수행(예: UPDATE)", "SAVEPOINT 지정", "추가 DML 수행", "문제 발생 시 ROLLBACK TO SAVEPOINT, 정상 완료 시 COMMIT"], "answer": [0, 1, 2, 3], "tags": [], "verified": false },
+  { "id": "u15-dbms-001", "unitId": "u15", "type": "dbms", "front": "Oracle과 SQL Server는 기본 트랜잭션 커밋 방식이 어떻게 다른가?", "back": "SQL Server는 기본적으로 각 문장이 자동커밋(autocommit)되며, 명시적 트랜잭션을 쓰려면 BEGIN TRAN ... COMMIT/ROLLBACK을 직접 써야 한다. Oracle은 DML 수행 후 명시적으로 COMMIT/ROLLBACK 하기 전까지 트랜잭션이 유지된다.", "tags": ["mssql"], "verified": false }
+]
