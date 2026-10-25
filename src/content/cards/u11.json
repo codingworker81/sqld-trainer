@@ -1,0 +1,25 @@
+[
+  { "id": "u11-basic-001", "unitId": "u11", "type": "definition", "front": "START WITH절은 무엇을 지정하는가?", "back": "계층 구조에서 최상위(루트) 행이 되는 조건을 지정한다.", "tags": [], "verified": false },
+  { "id": "u11-basic-002", "unitId": "u11", "type": "cloze", "front": "CONNECT BY PRIOR 부모컬럼 = 자식컬럼에서 PRIOR는 ___ 행의 컬럼 쪽에 붙는다.", "back": "상위(부모)", "tags": [], "verified": false },
+  { "id": "u11-basic-003", "unitId": "u11", "type": "ox", "front": "CONNECT BY PRIOR empno = mgr 에서 empno가 자식 컬럼이다.", "answer": "X", "explanation": "PRIOR가 붙은 empno가 부모(상위) 컬럼이고, mgr가 자식 쪽에서 참조하는 컬럼이다.", "tags": [], "verified": false },
+  { "id": "u11-basic-004", "unitId": "u11", "type": "predict", "front": "SELECT empno, mgr\nFROM (\n  SELECT 1 empno, NULL mgr FROM DUAL UNION ALL\n  SELECT 2 empno, 1 mgr FROM DUAL UNION ALL\n  SELECT 3 empno, 1 mgr FROM DUAL UNION ALL\n  SELECT 4 empno, 2 mgr FROM DUAL\n)\nSTART WITH mgr IS NULL\nCONNECT BY PRIOR empno = mgr\nORDER SIBLINGS BY empno\nFETCH FIRST 1 ROWS ONLY;", "back": "1, NULL", "explanation": "START WITH mgr IS NULL 조건을 만족하는 루트 행은 empno=1이다.", "tags": ["oracle"], "verified": false },
+  { "id": "u11-basic-005", "unitId": "u11", "type": "choice", "front": "다음 중 계층 구조의 루트 행을 지정하는 절은?", "choices": ["CONNECT BY", "START WITH", "ORDER BY", "PRIOR"], "answer": "2", "tags": [], "verified": false },
+  { "id": "u11-basic-006", "unitId": "u11", "type": "cloze", "front": "계층 구조에서 부모-자식 관계를 정의하는 절은 CONNECT BY ___이다.", "back": "PRIOR", "tags": [], "verified": false },
+  { "id": "u11-basic-007", "unitId": "u11", "type": "order", "front": "계층형 질의를 작성하는 일반적인 순서대로 배열하시오.", "items": ["SELECT ...", "START WITH 루트조건", "CONNECT BY PRIOR 관계"], "answer": [0, 1, 2], "tags": [], "verified": false },
+
+  { "id": "u11-level-001", "unitId": "u11", "type": "definition", "front": "LEVEL 의사컬럼은 무엇을 나타내는가?", "back": "루트를 1로 하는 계층의 깊이를 나타낸다.", "tags": [], "verified": false },
+  { "id": "u11-level-002", "unitId": "u11", "type": "predict", "front": "SELECT LEVEL lvl\nFROM (\n  SELECT 1 empno, NULL mgr FROM DUAL UNION ALL\n  SELECT 2 empno, 1 mgr FROM DUAL UNION ALL\n  SELECT 3 empno, 1 mgr FROM DUAL UNION ALL\n  SELECT 4 empno, 2 mgr FROM DUAL\n)\nSTART WITH mgr IS NULL\nCONNECT BY PRIOR empno = mgr\nWHERE empno = 4;", "back": "3", "explanation": "1(루트, 레벨1) → 2(레벨2) → 4(레벨3) 순으로 내려간다.", "tags": ["oracle"], "verified": false },
+  { "id": "u11-level-003", "unitId": "u11", "type": "ox", "front": "일반 ORDER BY를 쓰면 트리 구조가 깨지고 LEVEL 순서와 무관하게 재정렬된다.", "answer": "O", "tags": ["trap"], "verified": false },
+  { "id": "u11-level-004", "unitId": "u11", "type": "ox", "front": "ORDER SIBLINGS BY는 계층 구조(부모-자식 순서)를 유지하면서 형제 노드끼리만 정렬한다.", "answer": "O", "tags": ["trap"], "verified": false },
+  { "id": "u11-level-005", "unitId": "u11", "type": "choice", "front": "계층 구조를 유지하면서 형제 노드끼리만 정렬하려면?", "choices": ["ORDER BY", "GROUP BY", "ORDER SIBLINGS BY", "PARTITION BY"], "answer": "3", "tags": ["trap"], "verified": false },
+
+  { "id": "u11-path-001", "unitId": "u11", "type": "definition", "front": "CONNECT_BY_ROOT 컬럼은 무엇을 반환하는가?", "back": "각 행의 최상위 루트 값을 반환한다.", "tags": [], "verified": false },
+  { "id": "u11-path-002", "unitId": "u11", "type": "definition", "front": "SYS_CONNECT_BY_PATH(컬럼, 구분자)는 무엇을 만드는가?", "back": "루트부터 현재 행까지의 경로를 구분자로 이어붙인 문자열을 만든다.", "tags": [], "verified": false },
+  { "id": "u11-path-003", "unitId": "u11", "type": "predict", "front": "SELECT SYS_CONNECT_BY_PATH(ename, '/') path\nFROM (\n  SELECT 1 empno, NULL mgr, 'A' ename FROM DUAL UNION ALL\n  SELECT 2 empno, 1 mgr, 'B' ename FROM DUAL UNION ALL\n  SELECT 4 empno, 2 mgr, 'D' ename FROM DUAL\n)\nSTART WITH mgr IS NULL\nCONNECT BY PRIOR empno = mgr\nWHERE empno = 4;", "back": "'/A/B/D'", "explanation": "루트(A)부터 현재 행(D)까지의 경로를 '/'로 이어붙인다.", "tags": ["oracle"], "verified": false },
+  { "id": "u11-path-004", "unitId": "u11", "type": "predict", "front": "SELECT CONNECT_BY_ROOT ename root_name\nFROM (\n  SELECT 1 empno, NULL mgr, 'A' ename FROM DUAL UNION ALL\n  SELECT 2 empno, 1 mgr, 'B' ename FROM DUAL UNION ALL\n  SELECT 4 empno, 2 mgr, 'D' ename FROM DUAL\n)\nSTART WITH mgr IS NULL\nCONNECT BY PRIOR empno = mgr\nWHERE empno = 4;", "back": "'A'", "explanation": "empno=4(D) 행의 최상위 루트는 A다.", "tags": ["oracle"], "verified": false },
+
+  { "id": "u11-etc-001", "unitId": "u11", "type": "cloze", "front": "순환 참조(무한 루프)를 방지하려면 CONNECT BY 뒤에 ___ 키워드를 쓴다.", "back": "NOCYCLE", "tags": [], "verified": false },
+  { "id": "u11-etc-002", "unitId": "u11", "type": "ox", "front": "계층 구조에 순환 참조가 있으면 NOCYCLE 없이는 쿼리가 무한 루프에 빠질 수 있다.", "answer": "O", "tags": [], "verified": false },
+  { "id": "u11-etc-003", "unitId": "u11", "type": "dbms", "front": "Oracle의 CONNECT BY 문법은 SQL Server에서 어떻게 대체하는가?", "back": "SQL Server는 CONNECT BY가 없고, 재귀 CTE(WITH ... AS (초기쿼리 UNION ALL 재귀쿼리))로 계층 구조를 구현한다.", "tags": ["mssql"], "verified": false },
+  { "id": "u11-etc-004", "unitId": "u11", "type": "ox", "front": "SQL Server도 Oracle과 동일한 CONNECT BY 문법을 지원한다.", "answer": "X", "explanation": "SQL Server는 CONNECT BY가 없고 재귀 CTE로 계층 구조를 구현한다.", "tags": ["mssql"], "verified": false }
+]
