@@ -14,7 +14,9 @@ function remainingStudyDays(today: string): number {
   return Math.max(days, 1);
 }
 
-function buildReviewQueue(cards: Card[], states: Record<string, LeitnerState>, today: string): Card[] {
+/** 밀린 복습 카드(밀린 일수 내림차순, Box 오름차순). 홈 화면의 "오늘의
+ * 복습 N장" 카운트에도 재사용한다. */
+export function buildReviewQueue(cards: Card[], states: Record<string, LeitnerState>, today: string): Card[] {
   const due = cards.filter((c) => {
     const s = states[c.id];
     return s !== undefined && s.dueDate <= today;
@@ -27,7 +29,9 @@ function buildReviewQueue(cards: Card[], states: Record<string, LeitnerState>, t
   });
 }
 
-function buildNewQueue(
+/** 오늘 하루 신규 카드 배분(pacing 공식 적용). 홈 화면의 "오늘의 복습
+ * N장" 카운트에도 재사용한다. */
+export function buildNewQueue(
   cards: Card[],
   states: Record<string, LeitnerState>,
   units: Unit[],

@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import { useTheme, type ThemeSetting } from '../../app/ThemeProvider';
+import { getSettings, saveSettings, DEFAULT_SETTINGS } from '../../db';
 
 const themeOptions: { value: ThemeSetting; label: string }[] = [
   { value: 'light', label: '라이트' },
@@ -8,6 +10,22 @@ const themeOptions: { value: ThemeSetting; label: string }[] = [
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
+  const [examDate, setExamDate] = useState(DEFAULT_SETTINGS.examDate);
+  const [newCardLimit, setNewCardLimit] = useState(DEFAULT_SETTINGS.newCardLimit);
+  const [sessionSize, setSessionSize] = useState(DEFAULT_SETTINGS.sessionSize);
+
+  useEffect(() => {
+    let cancelled = false;
+    getSettings().then((settings) => {
+      if (cancelled) return;
+      setExamDate(settings.examDate);
+      setNewCardLimit(settings.newCardLimit);
+      setSessionSize(settings.sessionSize);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div>
@@ -32,15 +50,65 @@ export default function SettingsPage() {
             </button>
           ))}
         </div>
-        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-          현재는 이 세션에서만 적용됩니다. Stage 4부터 기기에 저장됩니다.
-        </p>
+      </section>
+
+      <section className="mt-6 flex flex-col gap-4">
+        <h2 className="text-sm font-semibold text-slate-500 dark:text-slate-400">학습 설정</h2>
+
+        <label className="block">
+          <span className="text-sm text-slate-700 dark:text-slate-200">시험일</span>
+          <input
+            type="date"
+            value={examDate}
+            onChange={(e) => {
+              setExamDate(e.target.value);
+              void saveSettings({ examDate: e.target.value });
+            }}
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-sm text-slate-700 dark:text-slate-200">하루 신규 카드 상한</span>
+          <input
+            type="number"
+            min={1}
+            value={newCardLimit}
+            onChange={(e) => {
+              const value = Math.max(1, Number(e.target.value) || 1);
+              setNewCardLimit(value);
+              void saveSettings({ newCardLimit: value });
+            }}
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-sm text-slate-700 dark:text-slate-200">세션 길이(카드 수)</span>
+          <input
+            type="number"
+            min={1}
+            value={sessionSize}
+            onChange={(e) => {
+              const value = Math.max(1, Number(e.target.value) || 1);
+              setSessionSize(value);
+              void saveSettings({ sessionSize: value });
+            }}
+            className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900"
+          />
+        </label>
       </section>
 
       <section className="mt-6">
-        <h2 className="text-sm font-semibold text-slate-500 dark:text-slate-400">시험일 · 신규 카드 상한 · 세션 길이 · 백업</h2>
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">Stage 6에서 구현됩니다.</p>
+        <h2 className="text-sm font-semibold text-slate-500 dark:text-slate-400">데이터 백업</h2>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+          내보내기·가져오기·초기화는 곧 추가됩니다.
+        </p>
       </section>
+
+      <p className="mt-8 text-center text-xs text-slate-400 dark:text-slate-600">
+        SQLD 2과목 암기 v{__APP_VERSION__}
+      </p>
     </div>
   );
 }

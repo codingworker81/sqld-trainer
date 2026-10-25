@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Card } from '../../../content/schema';
 import type { ReviewResult } from '../../../engine/types';
-import { MarkdownContent } from './MarkdownContent';
+import { MarkdownContent } from '../../../components/content/MarkdownContent';
 
 interface ChoiceCardProps {
   card: Extract<Card, { type: 'choice' }>;

@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { buildDailySession, buildUnitSession, chunkBySessionSize, requeueAgain } from './session';
+import {
+  buildDailySession,
+  buildUnitSession,
+  buildReviewQueue,
+  buildNewQueue,
+  chunkBySessionSize,
+  requeueAgain,
+} from './session';
 import type { Card, Unit } from '../content/schema';
 import type { LeitnerState, SessionSettings } from './types';
 
@@ -132,6 +139,21 @@ describe('buildUnitSession', () => {
     const states: Record<string, LeitnerState> = { 'u01-r1': leitner('u01-r1', 2, '2026-10-20') };
     const result = buildUnitSession(cards, states, 'u01', '2026-10-10');
     expect(result).toHaveLength(0);
+  });
+});
+
+describe('buildReviewQueue / buildNewQueue - 홈 화면 카운트용 export', () => {
+  it('홈 화면에서 복습 수 + 신규 수를 따로 세는 데 쓸 수 있다', () => {
+    const units = [unit('u01', 'high')];
+    const cards = [card('r1', 'u01'), card('n1', 'u01'), card('n2', 'u01')];
+    const states: Record<string, LeitnerState> = { r1: leitner('r1', 2, '2026-10-01') };
+    const today = '2026-11-08'; // 남은 학습일 1일 -> ceil(2/1)=2, newCardLimit 이내
+
+    const review = buildReviewQueue(cards, states, today);
+    const fresh = buildNewQueue(cards, states, units, { ...SETTINGS, newCardLimit: 10 }, today);
+
+    expect(review.map((c) => c.id)).toEqual(['r1']);
+    expect(fresh.map((c) => c.id)).toEqual(['n1', 'n2']);
   });
 });
 

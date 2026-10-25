@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '../../app/ThemeProvider';
 import { db } from '../../db';
@@ -86,6 +86,8 @@ beforeEach(async () => {
   await db.cardNotes.clear();
   await db.settings.clear();
 });
+
+afterEach(() => cleanup());
 
 describe('StudyPage - 단원 학습 세션', () => {
   it('샘플 카드 10장으로 세션이 시작되고 7가지 유형이 모두 정상 표시·채점된다', async () => {

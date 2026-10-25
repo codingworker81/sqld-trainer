@@ -3,7 +3,7 @@ import { getSettings } from './settingsStore';
 import { createNewCardState, type ReviewResult } from '../engine/types';
 import { nextState } from '../engine/leitner';
 import { computeInWrongNote } from '../engine/wrongNote';
-import type { ReviewState, ReviewMode } from './types';
+import type { ReviewState, ReviewMode, ReviewLog } from './types';
 
 export async function getState(
   cardId: string,
@@ -18,6 +18,11 @@ export async function getAllStates(
 ): Promise<Record<string, ReviewState>> {
   const rows = await database.reviewStates.toArray();
   return Object.fromEntries(rows.map((r) => [r.cardId, r]));
+}
+
+/** 홈 화면 통계(오늘 학습량, 연속 학습일)용. */
+export async function getAllLogs(database: AppDatabase = db): Promise<ReviewLog[]> {
+  return database.reviewLogs.toArray();
 }
 
 export interface SaveReviewInput {
