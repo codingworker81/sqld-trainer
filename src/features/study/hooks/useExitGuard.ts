@@ -41,5 +41,12 @@ export function useExitGuard(active: boolean) {
     setConfirmOpen(false);
   }
 
-  return { confirmOpen, closeConfirm: () => setConfirmOpen(false), disarm };
+  return {
+    confirmOpen,
+    closeConfirm: () => setConfirmOpen(false),
+    // 화면에 보이는 "나가기" 버튼 등, 뒤로 가기가 아닌 경로로도 같은
+    // 확인창을 띄우고 싶을 때 쓴다.
+    openConfirm: () => setConfirmOpen(true),
+    disarm,
+  };
 }

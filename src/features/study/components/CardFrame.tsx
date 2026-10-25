@@ -8,10 +8,11 @@ interface CardFrameProps {
   unit: Unit | undefined;
   position: number; // 1-based
   total: number;
+  onExit: () => void;
   children: ReactNode;
 }
 
-export function CardFrame({ card, unit, position, total, children }: CardFrameProps) {
+export function CardFrame({ card, unit, position, total, onExit, children }: CardFrameProps) {
   const isTrap = card.tags.includes('trap');
   const isMssql = card.tags.includes('mssql');
 
@@ -19,6 +20,14 @@ export function CardFrame({ card, unit, position, total, children }: CardFramePr
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between gap-2 px-4 pt-[calc(env(safe-area-inset-top)+0.75rem)] pb-2 text-sm text-slate-500 dark:text-slate-400">
         <div className="flex min-w-0 items-center gap-2">
+          <button
+            type="button"
+            aria-label="학습 나가기"
+            onClick={onExit}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+          >
+            ✕
+          </button>
           <span className="truncate font-medium text-slate-700 dark:text-slate-200">
             {unit?.title ?? card.unitId}
           </span>

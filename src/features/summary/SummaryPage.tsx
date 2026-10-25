@@ -42,12 +42,21 @@ export default function SummaryPage() {
       {toc.length > 0 && (
         <nav aria-label="목차" className="mt-4 rounded-xl border border-slate-200 p-3 dark:border-slate-700">
           <p className="mb-1 text-xs font-semibold text-slate-500 dark:text-slate-400">목차</p>
+          {/* <a href="#slug">가 아니라 버튼+scrollIntoView를 쓴다: 이 앱은
+              HashRouter라 location.hash가 곧 라우트 경로라서, 실제 앵커
+              이동으로 hash를 바꾸면 라우터가 그 값을 알 수 없는 경로로
+              해석해 화면이 통째로 빈 채로 날아간다(뒤로 가기 외엔 못
+              빠져나옴). */}
           <ul className="space-y-1 text-sm">
             {toc.map((entry) => (
               <li key={entry.slug} className={entry.level === 3 ? 'pl-3' : ''}>
-                <a href={`#${entry.slug}`} className="text-blue-600 hover:underline dark:text-blue-400">
+                <button
+                  type="button"
+                  onClick={() => document.getElementById(entry.slug)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                  className="text-blue-600 hover:underline dark:text-blue-400"
+                >
                   {entry.text}
-                </a>
+                </button>
               </li>
             ))}
           </ul>

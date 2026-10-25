@@ -242,7 +242,7 @@ export default function StudyPage() {
 
   return (
     <div className="h-dvh safe-bottom">
-      <CardFrame card={card} unit={unit} position={index + 1} total={queue.length}>
+      <CardFrame card={card} unit={unit} position={index + 1} total={queue.length} onExit={exitGuard.openConfirm}>
         <CardRenderer
           card={card}
           flipped={flipped}

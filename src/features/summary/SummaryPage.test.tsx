@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '../../app/ThemeProvider';
 import { getUnits } from '../../content';
@@ -34,16 +34,28 @@ describe('SummaryPage - 19개 단원 전체', () => {
     });
   }
 
-  it('목차 링크의 슬러그가 실제 렌더된 헤딩 id와 일치한다(u03 기준)', () => {
+  it('목차는 <a href="#...">를 쓰지 않는다(HashRouter에서 라우트가 깨짐)', () => {
+    renderSummary('u03');
+    expect(document.querySelectorAll('nav a[href^="#"]')).toHaveLength(0);
+  });
+
+  it('목차 버튼을 누르면 location.hash를 바꾸지 않고 해당 헤딩으로 스크롤한다', () => {
     renderSummary('u03');
 
-    const tocLinks = document.querySelectorAll('nav a[href^="#"]');
-    expect(tocLinks.length).toBeGreaterThan(0);
-    tocLinks.forEach((link) => {
-      const slug = link.getAttribute('href')!.slice(1);
-      expect(document.getElementById(slug)).not.toBeNull();
-      expect(slugifyHeading(link.textContent ?? '')).toBe(slug);
+    const tocButtons = document.querySelectorAll('nav button');
+    expect(tocButtons.length).toBeGreaterThan(0);
+
+    const hashBefore = window.location.hash;
+    tocButtons.forEach((button) => {
+      const slug = slugifyHeading(button.textContent ?? '');
+      const heading = document.getElementById(slug);
+      expect(heading).not.toBeNull();
+
+      const scrollSpy = vi.spyOn(heading!, 'scrollIntoView');
+      fireEvent.click(button);
+      expect(scrollSpy).toHaveBeenCalledTimes(1);
     });
+    expect(window.location.hash).toBe(hashBefore); // 라우트 경로가 그대로 유지됨
   });
 
   it('없는 단원이면 안내 문구를 보여준다', () => {

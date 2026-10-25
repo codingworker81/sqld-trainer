@@ -156,3 +156,39 @@ describe('StudyPage - 단원 학습 세션', () => {
     });
   });
 });
+
+describe('StudyPage - 학습 중 나가기(뒤로 가기)', () => {
+  it('뒤로 가기를 누르면 확인 모달이 뜨고, "그만두기"를 누르면 홈으로 나간다', async () => {
+    renderStudyPage('?mode=unit&unitId=u01');
+    await screen.findByText('1/10');
+
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    await screen.findByText('학습을 그만둘까요? 기록은 저장되어 있습니다');
+
+    fireEvent.click(screen.getByRole('button', { name: '그만두기' }));
+    await screen.findByText('홈 화면');
+  });
+
+  it('확인 모달에서 "계속 학습"을 누르면 세션이 그대로 유지된다', async () => {
+    renderStudyPage('?mode=unit&unitId=u01');
+    await screen.findByText('1/10');
+
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    await screen.findByText('학습을 그만둘까요? 기록은 저장되어 있습니다');
+
+    fireEvent.click(screen.getByRole('button', { name: '계속 학습' }));
+    expect(screen.queryByText('학습을 그만둘까요? 기록은 저장되어 있습니다')).not.toBeInTheDocument();
+    expect(screen.getByText('1/10')).toBeInTheDocument();
+  });
+
+  it('화면의 "✕ 학습 나가기" 버튼을 눌러도 같은 확인 모달이 뜬다(PWA 설치 창처럼 뒤로 가기 버튼이 안 보이는 경우 대비)', async () => {
+    renderStudyPage('?mode=unit&unitId=u01');
+    await screen.findByText('1/10');
+
+    fireEvent.click(screen.getByRole('button', { name: '학습 나가기' }));
+    await screen.findByText('학습을 그만둘까요? 기록은 저장되어 있습니다');
+
+    fireEvent.click(screen.getByRole('button', { name: '그만두기' }));
+    await screen.findByText('홈 화면');
+  });
+});
