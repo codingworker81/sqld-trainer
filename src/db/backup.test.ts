@@ -30,7 +30,7 @@ function log(cardId: string, reviewedAt: string, overrides: Partial<ReviewLog> =
 }
 
 function note(cardId: string, overrides: Partial<CardNote> = {}): CardNote {
-  return { cardId, bookmarked: false, memo: '', errorReport: '', ...overrides };
+  return { cardId, bookmarked: false, memo: '', errorReport: '', errorReportedAt: '', ...overrides };
 }
 
 describe('mergeBackupData - reviewStates', () => {

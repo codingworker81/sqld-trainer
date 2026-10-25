@@ -25,6 +25,7 @@ export interface CardNote {
   bookmarked: boolean;
   memo: string;
   errorReport: string;
+  errorReportedAt: string; // YYYY-MM-DD, Asia/Seoul. errorReport가 비어 있으면 ''
 }
 
 export interface Settings {
@@ -84,6 +85,7 @@ export const cardNoteSchema = z.object({
   bookmarked: z.boolean(),
   memo: z.string(),
   errorReport: z.string(),
+  errorReportedAt: z.string(),
 }) satisfies z.ZodType<CardNote>;
 
 export const settingRowSchema = z.object({

@@ -1,4 +1,5 @@
 import { backupFileSchema, type BackupFile } from '../../db';
+import { downloadBlob } from './downloadFile';
 
 /** sqld-backup-YYYYMMDD-HHmm.json, Asia/Seoul 기준. */
 export function backupFileName(now: Date = new Date()): string {
@@ -13,17 +14,6 @@ export function backupFileName(now: Date = new Date()): string {
 
 function toBlob(backup: BackupFile): Blob {
   return new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-}
-
-function downloadBlob(blob: Blob, filename: string): void {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
 }
 
 /** Android(공유 시트 지원 시) 또는 PC(파일 다운로드)로 백업을 내보낸다. */
@@ -48,6 +38,21 @@ export async function shareOrDownloadBackup(backup: BackupFile): Promise<'shared
   return 'downloaded';
 }
 
+/** Stage 9(errorReportedAt 추가) 이전, v1.0.0에서 내보낸 백업 파일의
+ * cardNotes에는 이 필드가 없다. 가져오기가 실패하지 않도록 빈 문자열로
+ * 채워 넣는다(하위 호환). */
+function fillMissingCardNoteFields(raw: unknown): unknown {
+  if (typeof raw !== 'object' || raw === null || !('cardNotes' in raw)) return raw;
+  const obj = raw as { cardNotes: unknown };
+  if (!Array.isArray(obj.cardNotes)) return raw;
+  return {
+    ...obj,
+    cardNotes: obj.cardNotes.map((note) =>
+      typeof note === 'object' && note !== null ? { errorReportedAt: '', ...note } : note,
+    ),
+  };
+}
+
 /** 가져온 파일을 읽고 백업 스키마로 검증한다. */
 export async function parseBackupFile(file: File): Promise<BackupFile> {
   const text = await file.text();
@@ -57,7 +62,7 @@ export async function parseBackupFile(file: File): Promise<BackupFile> {
   } catch {
     throw new Error('올바른 JSON 파일이 아닙니다.');
   }
-  const result = backupFileSchema.safeParse(raw);
+  const result = backupFileSchema.safeParse(fillMissingCardNoteFields(raw));
   if (!result.success) {
     throw new Error('백업 파일 형식이 올바르지 않습니다.');
   }

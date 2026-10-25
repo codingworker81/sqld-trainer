@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { AppDatabase } from './db';
-import { getState, getAllStates, saveReview } from './reviewStore';
+import { getState, getAllStates, saveReview, setManualWrongNote } from './reviewStore';
 import { saveSettings } from './settingsStore';
 
 let database: AppDatabase;
@@ -74,6 +74,36 @@ describe('saveReview - 오답노트 연동', () => {
     );
     expect(final.correctStreak).toBe(3);
     expect(final.inWrongNote).toBe(false);
+  });
+});
+
+describe('setManualWrongNote', () => {
+  it('리뷰 기록이 없는 카드도 수동으로 오답노트에 추가할 수 있다', async () => {
+    const state = await setManualWrongNote('u01-a-001', true, '2026-10-24', database);
+    expect(state.manualWrongNote).toBe(true);
+    expect(state.inWrongNote).toBe(true);
+  });
+
+  it('수동 추가 카드는 연속 3회 맞혀도 자동 규칙과 무관하게 남아 있다', async () => {
+    await setManualWrongNote('u01-a-001', true, '2026-10-24', database);
+    await saveReview({ cardId: 'u01-a-001', result: 'good', today: '2026-10-25', mode: 'daily', elapsedMs: 0 }, database);
+    await saveReview({ cardId: 'u01-a-001', result: 'good', today: '2026-10-26', mode: 'daily', elapsedMs: 0 }, database);
+    const state = await saveReview(
+      { cardId: 'u01-a-001', result: 'good', today: '2026-10-27', mode: 'daily', elapsedMs: 0 },
+      database,
+    );
+    expect(state.correctStreak).toBe(3);
+    expect(state.manualWrongNote).toBe(true);
+    expect(state.inWrongNote).toBe(true); // 수동 플래그 때문에 자동 해제 규칙이 적용되지 않음
+  });
+
+  it('수동 해제하면 그 시점의 자동 규칙으로 다시 평가된다', async () => {
+    await saveReview({ cardId: 'u01-a-001', result: 'again', today: '2026-10-24', mode: 'daily', elapsedMs: 0 }, database);
+    // 틀림 1회로 자동으로도 이미 오답노트에 있는 상태에서 수동 플래그만 켰다가 끈다.
+    await setManualWrongNote('u01-a-001', true, '2026-10-24', database);
+    const state = await setManualWrongNote('u01-a-001', false, '2026-10-24', database);
+    expect(state.manualWrongNote).toBe(false);
+    expect(state.inWrongNote).toBe(true); // 최근 7일 안 '틀림' 1회 자동 규칙이 여전히 적용됨
   });
 });
 

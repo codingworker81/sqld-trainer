@@ -7,6 +7,7 @@ import { buildDailySession, buildUnitSession, chunkBySessionSize, requeueAgain }
 import { todayInSeoul } from '../../engine/date';
 import type { ReviewResult } from '../../engine/types';
 import { FLIP_CARD_TYPES } from './cardTypeMeta';
+import { getPendingCardIds } from './pendingSession';
 import { CardFrame } from './components/CardFrame';
 import { CardRenderer } from './components/CardRenderer';
 import { SessionResult } from './components/SessionResult';
@@ -14,11 +15,25 @@ import { ExitConfirmDialog } from './components/ExitConfirmDialog';
 import { useExitGuard } from './hooks/useExitGuard';
 
 type Phase = 'loading' | 'studying' | 'result' | 'empty';
+type Mode = 'daily' | 'unit' | 'custom';
+
+function modeFromParam(value: string | null): Mode {
+  if (value === 'unit') return 'unit';
+  if (value === 'custom') return 'custom';
+  return 'daily';
+}
+
+/** 노트·필터 학습(mode=custom): 미리 골라둔 id 순서대로 카드를 모은다.
+ * 간격 반복 일정(복습일)과 무관하게 "이 목록 전체"를 그대로 학습한다. */
+function getCardsForIds(ids: string[]): Card[] {
+  const map = new Map(getAllCards().map((c) => [c.id, c]));
+  return ids.map((id) => map.get(id)).filter((c): c is Card => c !== undefined);
+}
 
 export default function StudyPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const mode = searchParams.get('mode') === 'unit' ? 'unit' : 'daily';
+  const mode = modeFromParam(searchParams.get('mode'));
   const unitIdParam = searchParams.get('unitId') ?? undefined;
 
   const [phase, setPhase] = useState<Phase>('loading');
@@ -68,7 +83,9 @@ export default function StudyPage() {
       const fullQueue =
         mode === 'unit' && unitIdParam
           ? buildUnitSession(getCardsByUnit(unitIdParam), states, unitIdParam, today)
-          : buildDailySession(getAllCards(), states, allUnits, settings, today);
+          : mode === 'custom'
+            ? getCardsForIds(getPendingCardIds())
+            : buildDailySession(getAllCards(), states, allUnits, settings, today);
 
       if (fullQueue.length === 0) {
         setPhase('empty');

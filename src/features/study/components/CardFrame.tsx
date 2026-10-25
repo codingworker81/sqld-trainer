@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Card, Unit } from '../../../content/schema';
 import { CARD_TYPE_LABEL } from '../cardTypeMeta';
+import { CardNoteActions } from './CardNoteActions';
 
 interface CardFrameProps {
   card: Card;
@@ -38,6 +39,9 @@ export function CardFrame({ card, unit, position, total, children }: CardFramePr
         <span className="shrink-0 tabular-nums">
           {position}/{total}
         </span>
+      </div>
+      <div className="flex items-center justify-end px-2">
+        <CardNoteActions cardId={card.id} />
       </div>
       <div className="flex-1 overflow-y-auto px-4 pb-4">{children}</div>
     </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTheme, type ThemeSetting } from '../../app/ThemeProvider';
 import { getSettings, saveSettings, DEFAULT_SETTINGS } from '../../db';
 import { BackupSection } from './BackupSection';
+import { exportErrorReports } from './errorReportActions';
 
 const themeOptions: { value: ThemeSetting; label: string }[] = [
   { value: 'light', label: '라이트' },
@@ -14,6 +15,12 @@ export default function SettingsPage() {
   const [examDate, setExamDate] = useState(DEFAULT_SETTINGS.examDate);
   const [newCardLimit, setNewCardLimit] = useState(DEFAULT_SETTINGS.newCardLimit);
   const [sessionSize, setSessionSize] = useState(DEFAULT_SETTINGS.sessionSize);
+  const [errorReportStatus, setErrorReportStatus] = useState('');
+
+  async function handleExportErrorReports() {
+    const count = await exportErrorReports();
+    setErrorReportStatus(count > 0 ? `${count}건을 내보냈습니다.` : '신고된 오류가 없습니다.');
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -101,6 +108,20 @@ export default function SettingsPage() {
       </section>
 
       <BackupSection />
+
+      <section className="mt-6">
+        <h2 className="text-sm font-semibold text-slate-500 dark:text-slate-400">콘텐츠 오류 신고</h2>
+        <button
+          type="button"
+          onClick={() => void handleExportErrorReports()}
+          className="mt-2 min-h-11 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 dark:border-slate-700 dark:text-slate-200"
+        >
+          오류 신고 카드 목록 내보내기
+        </button>
+        {errorReportStatus && (
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">{errorReportStatus}</p>
+        )}
+      </section>
 
       <p className="mt-8 text-center text-xs text-slate-400 dark:text-slate-600">
         SQLD 2과목 암기 v{__APP_VERSION__}

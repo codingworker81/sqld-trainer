@@ -231,7 +231,7 @@ MVP(P0)는 "카드 학습 + 간격 반복 + 진행률 + Android·PC 설치(PWA)"
 | Card | `content/cards/unit-XX.json` | id, unitId, type, front, back, explanation, choices, answer, tags, verified |
 | ReviewState | IndexedDB `reviewStates` | cardId, box, dueDate, lastReviewedAt, correctStreak, lapseCount, inWrongNote, manualWrongNote |
 | ReviewLog | IndexedDB `reviewLogs` | id, cardId, reviewedAt, result(again/hard/good), mode(daily/quiz/exam), elapsedMs |
-| CardNote | IndexedDB `cardNotes` | cardId, bookmarked, memo, errorReport |
+| CardNote | IndexedDB `cardNotes` | cardId, bookmarked, memo, errorReport, errorReportedAt |
 | Settings | IndexedDB `settings` | examDate, newCardLimit, sessionSize, theme |
 
 ### 카드 JSON 예시
