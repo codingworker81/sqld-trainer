@@ -9,3 +9,6 @@ dist/
 *.local
 *.tsbuildinfo
 coverage/
+
+# Temporary manual-QA content (not real Stage 7 cards)
+src/content/cards/zz-*.json

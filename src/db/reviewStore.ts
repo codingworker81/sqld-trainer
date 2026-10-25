@@ -12,6 +12,14 @@ export async function getState(
   return database.reviewStates.get(cardId);
 }
 
+/** 세션 구성(src/engine/session.ts)에 넘길 cardId -> ReviewState 맵. */
+export async function getAllStates(
+  database: AppDatabase = db,
+): Promise<Record<string, ReviewState>> {
+  const rows = await database.reviewStates.toArray();
+  return Object.fromEntries(rows.map((r) => [r.cardId, r]));
+}
+
 export interface SaveReviewInput {
   cardId: string;
   result: ReviewResult;

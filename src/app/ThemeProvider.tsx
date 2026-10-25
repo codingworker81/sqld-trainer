@@ -6,6 +6,9 @@ export type { ThemeSetting };
 interface ThemeContextValue {
   theme: ThemeSetting;
   setTheme: (theme: ThemeSetting) => void;
+  /** theme='system'일 때 실제로 적용 중인 값. 구문 강조처럼 라이트/다크
+   * 둘 중 하나를 직접 골라야 하는 곳에서 쓴다. */
+  resolvedTheme: 'light' | 'dark';
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -40,16 +43,21 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return () => media.removeEventListener('change', onChange);
   }, []);
 
+  const isDark = resolveIsDark(theme, prefersDark);
+
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', resolveIsDark(theme, prefersDark));
-  }, [theme, prefersDark]);
+    document.documentElement.classList.toggle('dark', isDark);
+  }, [isDark]);
 
   const setTheme = (next: ThemeSetting) => {
     setThemeState(next);
     void saveSettings({ theme: next });
   };
 
-  const value = useMemo(() => ({ theme, setTheme }), [theme]);
+  const value = useMemo(
+    () => ({ theme, setTheme, resolvedTheme: (isDark ? 'dark' : 'light') as 'light' | 'dark' }),
+    [theme, isDark],
+  );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

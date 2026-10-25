@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { AppDatabase } from './db';
-import { getState, saveReview } from './reviewStore';
+import { getState, getAllStates, saveReview } from './reviewStore';
 import { saveSettings } from './settingsStore';
 
 let database: AppDatabase;
@@ -74,5 +74,15 @@ describe('saveReview - 오답노트 연동', () => {
     );
     expect(final.correctStreak).toBe(3);
     expect(final.inWrongNote).toBe(false);
+  });
+});
+
+describe('getAllStates', () => {
+  it('cardId -> ReviewState 맵을 반환한다', async () => {
+    await saveReview({ cardId: 'u01-a-001', result: 'good', today: '2026-10-24', mode: 'daily', elapsedMs: 0 }, database);
+    await saveReview({ cardId: 'u02-a-001', result: 'again', today: '2026-10-24', mode: 'daily', elapsedMs: 0 }, database);
+    const all = await getAllStates(database);
+    expect(Object.keys(all).sort()).toEqual(['u01-a-001', 'u02-a-001']);
+    expect(all['u01-a-001'].box).toBe(2);
   });
 });

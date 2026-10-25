@@ -90,6 +90,23 @@ export function buildDailySession(
   return interleave(reviewQueue, newQueue);
 }
 
+/**
+ * 특정 단원을 골라 학습할 때 쓰는 큐: 그 단원의 밀린 복습 카드 전체 +
+ * 그 단원의 미학습 카드 전체(일일 신규 카드 상한/배분 공식 미적용 —
+ * 사용자가 이 단원을 직접 골랐으므로 전부 보여준다), 2:1로 섞는다.
+ */
+export function buildUnitSession(
+  cards: Card[],
+  states: Record<string, LeitnerState>,
+  unitId: string,
+  today: string,
+): Card[] {
+  const unitCards = cards.filter((c) => c.unitId === unitId);
+  const reviewQueue = buildReviewQueue(unitCards, states, today);
+  const newQueue = unitCards.filter((c) => states[c.id] === undefined);
+  return interleave(reviewQueue, newQueue);
+}
+
 export function chunkBySessionSize<T>(queue: T[], sessionSize: number): T[][] {
   if (sessionSize <= 0) return [queue];
   const chunks: T[][] = [];

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildDailySession, chunkBySessionSize, requeueAgain } from './session';
+import { buildDailySession, buildUnitSession, chunkBySessionSize, requeueAgain } from './session';
 import type { Card, Unit } from '../content/schema';
 import type { LeitnerState, SessionSettings } from './types';
 
@@ -105,6 +105,32 @@ describe('buildDailySession - 복습 카드 정렬', () => {
     const cards = [card('a', 'u01')];
     const states: Record<string, LeitnerState> = { a: leitner('a', 2, '2026-10-20') };
     const result = buildDailySession(cards, states, units, { ...SETTINGS, newCardLimit: 0 }, '2026-10-10');
+    expect(result).toHaveLength(0);
+  });
+});
+
+describe('buildUnitSession', () => {
+  it('해당 단원의 복습 카드 + 미학습 카드 전체를 2:1로 섞는다(신규 카드 상한 미적용)', () => {
+    const cards = [
+      card('u01-r1', 'u01'),
+      card('u01-r2', 'u01'),
+      card('u01-n1', 'u01'),
+      card('u01-n2', 'u01'),
+      card('u01-n3', 'u01'),
+      card('u02-other', 'u02'), // 다른 단원은 포함되지 않아야 함
+    ];
+    const states: Record<string, LeitnerState> = {
+      'u01-r1': leitner('u01-r1', 2, '2026-10-01'),
+      'u01-r2': leitner('u01-r2', 2, '2026-10-01'),
+    };
+    const result = buildUnitSession(cards, states, 'u01', '2026-10-10');
+    expect(result.map((c) => c.id)).toEqual(['u01-r1', 'u01-r2', 'u01-n1', 'u01-n2', 'u01-n3']);
+  });
+
+  it('아직 복습일이 안 된 카드는 제외한다', () => {
+    const cards = [card('u01-r1', 'u01')];
+    const states: Record<string, LeitnerState> = { 'u01-r1': leitner('u01-r1', 2, '2026-10-20') };
+    const result = buildUnitSession(cards, states, 'u01', '2026-10-10');
     expect(result).toHaveLength(0);
   });
 });
