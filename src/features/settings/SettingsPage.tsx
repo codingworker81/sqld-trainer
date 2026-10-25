@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTheme, type ThemeSetting } from '../../app/ThemeProvider';
 import { getSettings, saveSettings, DEFAULT_SETTINGS } from '../../db';
+import { BackupSection } from './BackupSection';
 
 const themeOptions: { value: ThemeSetting; label: string }[] = [
   { value: 'light', label: '라이트' },
@@ -99,12 +100,7 @@ export default function SettingsPage() {
         </label>
       </section>
 
-      <section className="mt-6">
-        <h2 className="text-sm font-semibold text-slate-500 dark:text-slate-400">데이터 백업</h2>
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-          내보내기·가져오기·초기화는 곧 추가됩니다.
-        </p>
-      </section>
+      <BackupSection />
 
       <p className="mt-8 text-center text-xs text-slate-400 dark:text-slate-600">
         SQLD 2과목 암기 v{__APP_VERSION__}
