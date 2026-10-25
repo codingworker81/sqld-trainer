@@ -12,3 +12,6 @@ coverage/
 
 # Temporary manual-QA content (not real Stage 7 cards)
 src/content/cards/zz-*.json
+
+# Claude Code internal state (not project content)
+.claude/
