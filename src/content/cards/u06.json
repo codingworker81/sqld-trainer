@@ -1,0 +1,29 @@
+[
+  { "id": "u06-type-001", "unitId": "u06", "type": "definition", "front": "단일행 서브쿼리는 어떤 연산자와 비교하는가?", "back": "결과가 1행이므로 =, >, < 등 단일행 비교 연산자를 쓴다.", "tags": [], "verified": false },
+  { "id": "u06-type-002", "unitId": "u06", "type": "definition", "front": "다중행 서브쿼리는 어떤 연산자와 비교하는가?", "back": "결과가 여러 행이므로 IN, ANY, ALL, EXISTS 같은 다중행 비교 연산자를 쓴다.", "tags": [], "verified": false },
+  { "id": "u06-type-003", "unitId": "u06", "type": "cloze", "front": "내부 쿼리가 외부 쿼리의 컬럼을 참조해 외부 행마다 재실행되는 개념의 서브쿼리를 ___ 서브쿼리라고 한다.", "back": "연관(상관)", "tags": [], "verified": false },
+  { "id": "u06-type-004", "unitId": "u06", "type": "cloze", "front": "SELECT절에 들어가며 결과가 단일 값(1행 1열)인 서브쿼리를 ___ 서브쿼리라고 한다.", "back": "스칼라", "tags": [], "verified": false },
+  { "id": "u06-type-005", "unitId": "u06", "type": "choice", "front": "서브쿼리가 1행 1열의 단일 값을 반환해 SELECT절에 쓰이는 것을 무엇이라 하는가?", "choices": ["연관 서브쿼리", "스칼라 서브쿼리", "다중행 서브쿼리", "인라인 뷰"], "answer": "2", "tags": [], "verified": false },
+  { "id": "u06-type-006", "unitId": "u06", "type": "ox", "front": "연관 서브쿼리는 외부 쿼리의 컬럼을 참조하지 않는다.", "answer": "X", "explanation": "연관 서브쿼리는 외부 쿼리의 컬럼을 참조해 외부 행마다 재실행되는 개념이라는 점이 핵심이다.", "tags": [], "verified": false },
+  { "id": "u06-type-007", "unitId": "u06", "type": "cloze", "front": "결과가 1행인 서브쿼리는 ___ 서브쿼리라고 하며 =, >, <로 비교한다.", "back": "단일행", "tags": [], "verified": false },
+  { "id": "u06-type-008", "unitId": "u06", "type": "choice", "front": "다음 중 다중행 비교에 쓸 수 없는 연산자는?", "choices": ["IN", "ANY", "ALL", ">"], "answer": "4", "tags": [], "verified": false },
+
+  { "id": "u06-cond-001", "unitId": "u06", "type": "definition", "front": "컬럼 > ANY (서브쿼리)는 언제 참이 되는가?", "back": "서브쿼리 결과 중 하나라도 그 컬럼보다 작은 값이 있으면 참이다(= 서브쿼리 결과의 최솟값보다 큼).", "tags": [], "verified": false },
+  { "id": "u06-cond-002", "unitId": "u06", "type": "definition", "front": "컬럼 > ALL (서브쿼리)는 언제 참이 되는가?", "back": "서브쿼리 결과 전부보다 커야 참이다(= 서브쿼리 결과의 최댓값보다 큼).", "tags": [], "verified": false },
+  { "id": "u06-cond-003", "unitId": "u06", "type": "ox", "front": "컬럼 = ANY (서브쿼리)는 IN과 같은 의미다.", "answer": "O", "tags": [], "verified": false },
+  { "id": "u06-cond-004", "unitId": "u06", "type": "cloze", "front": "서브쿼리 결과가 한 건이라도 있으면 참이 되는, 존재 여부만 확인하는 연산자는 ___이다.", "back": "EXISTS", "tags": [], "verified": false },
+  { "id": "u06-cond-005", "unitId": "u06", "type": "predict", "front": "SELECT CASE WHEN 10 > ANY (SELECT * FROM (SELECT 5 v FROM DUAL UNION ALL SELECT 20 v FROM DUAL))\n            THEN 'TRUE' ELSE 'FALSE' END\nFROM DUAL;", "back": "'TRUE'", "explanation": "서브쿼리 결과(5, 20) 중 5보다는 크므로 ANY 조건을 만족한다.", "tags": ["oracle"], "verified": false },
+  { "id": "u06-cond-006", "unitId": "u06", "type": "predict", "front": "SELECT CASE WHEN 10 > ALL (SELECT * FROM (SELECT 5 v FROM DUAL UNION ALL SELECT 20 v FROM DUAL))\n            THEN 'TRUE' ELSE 'FALSE' END\nFROM DUAL;", "back": "'FALSE'", "explanation": "서브쿼리 결과 중 20보다는 작으므로 전부보다 크다는 조건을 만족하지 못한다.", "tags": ["oracle"], "verified": false },
+  { "id": "u06-cond-007", "unitId": "u06", "type": "ox", "front": "NOT IN 서브쿼리 결과에 NULL이 하나라도 섞이면 결과가 0건이 된다.", "answer": "O", "tags": ["trap"], "verified": false },
+  { "id": "u06-cond-008", "unitId": "u06", "type": "predict", "front": "SELECT COUNT(*)\nFROM (SELECT 1 id FROM DUAL UNION ALL SELECT 2 id FROM DUAL) t\nWHERE id NOT IN (\n  SELECT id FROM (\n    SELECT 1 id FROM DUAL UNION ALL SELECT CAST(NULL AS NUMBER) id FROM DUAL\n  )\n);", "back": "0", "explanation": "서브쿼리 결과에 NULL이 섞여 있어 NOT IN 비교가 전부 UNKNOWN이 되어 0건이 된다.", "tags": ["oracle", "trap"], "verified": false },
+  { "id": "u06-cond-009", "unitId": "u06", "type": "ox", "front": "NOT EXISTS는 서브쿼리 결과에 NULL이 섞여 있어도 NOT IN과 같은 문제가 생기지 않는다.", "answer": "O", "explanation": "NOT EXISTS는 존재 여부만 확인하므로 NULL 때문에 전체가 거짓이 되는 문제가 없어 더 안전하다.", "tags": ["trap"], "verified": false },
+  { "id": "u06-cond-010", "unitId": "u06", "type": "choice", "front": "서브쿼리 결과에 NULL이 섞여 있을 때 안전하게 쓸 수 있는 연산자는?", "choices": ["NOT IN", "NOT EXISTS", "= ANY", "> ALL"], "answer": "2", "tags": ["trap"], "verified": false },
+  { "id": "u06-cond-011", "unitId": "u06", "type": "predict", "front": "SELECT CASE WHEN EXISTS (SELECT 1 FROM DUAL WHERE 1 = 2) THEN 'TRUE' ELSE 'FALSE' END\nFROM DUAL;", "back": "'FALSE'", "explanation": "서브쿼리 결과가 한 건도 없으므로 EXISTS는 거짓이다.", "tags": ["oracle"], "verified": false },
+  { "id": "u06-cond-012", "unitId": "u06", "type": "cloze", "front": "컬럼 = ANY (서브쿼리)는 ___ 연산자와 같은 의미다.", "back": "IN", "tags": [], "verified": false },
+
+  { "id": "u06-with-001", "unitId": "u06", "type": "definition", "front": "WITH절(CTE)을 쓰는 목적은?", "back": "서브쿼리에 이름을 붙여 여러 번 재사용하고 가독성을 높이기 위해서다.", "tags": [], "verified": false },
+  { "id": "u06-with-002", "unitId": "u06", "type": "ox", "front": "Oracle의 WITH절은 자기 자신을 참조하는 재귀 쿼리를 지원하지 않는다.", "answer": "X", "explanation": "Oracle은 WITH 안에서 자기 자신을 참조하는 재귀 쿼리(RECURSIVE WITH)를 지원한다.", "tags": [], "verified": false },
+  { "id": "u06-with-003", "unitId": "u06", "type": "predict", "front": "WITH nums AS (\n  SELECT 1 n FROM DUAL UNION ALL SELECT 2 n FROM DUAL UNION ALL SELECT 3 n FROM DUAL\n)\nSELECT SUM(n) FROM nums;", "back": "6", "tags": ["oracle"], "verified": false },
+  { "id": "u06-with-004", "unitId": "u06", "type": "order", "front": "WITH절 쿼리를 작성하는 순서대로 배열하시오.", "items": ["WITH cte_name AS (서브쿼리)", "SELECT ... FROM cte_name"], "answer": [0, 1], "tags": [], "verified": false },
+  { "id": "u06-with-005", "unitId": "u06", "type": "ox", "front": "WITH절로 정의한 이름은 메인 쿼리에서 일반 테이블처럼 참조할 수 있다.", "answer": "O", "tags": [], "verified": false }
+]
