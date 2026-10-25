@@ -1,0 +1,7 @@
+[
+  { "id": "u18-def-001", "unitId": "u18", "type": "definition", "front": "DML, DDL, DCL, TCL은 각각 무엇을 위한 SQL 명령어 분류인가?", "back": "DML(데이터 조작: SELECT·INSERT·UPDATE·DELETE·MERGE), DDL(데이터 정의: CREATE·ALTER·DROP·RENAME·TRUNCATE), DCL(데이터 제어/권한: GRANT·REVOKE), TCL(트랜잭션 제어: COMMIT·ROLLBACK·SAVEPOINT).", "tags": [], "verified": false },
+  { "id": "u18-ox-001", "unitId": "u18", "type": "ox", "front": "TRUNCATE는 DML(데이터 조작어)에 속한다.", "answer": "X", "explanation": "TRUNCATE는 DDL이다. DELETE와 결과가 비슷해 보여도 분류상 전혀 다르며, 실행 즉시 암묵적으로 COMMIT된다는 점도 DML인 DELETE와 다르다.", "tags": ["trap"], "verified": false },
+  { "id": "u18-choice-001", "unitId": "u18", "type": "choice", "front": "다음 중 SQL 명령어 분류가 다른 하나는?", "choices": ["DELETE", "TRUNCATE", "UPDATE", "INSERT"], "answer": "2", "explanation": "DELETE, UPDATE, INSERT는 DML이지만 TRUNCATE는 DDL이다.", "tags": ["trap"], "verified": false },
+  { "id": "u18-cloze-001", "unitId": "u18", "type": "cloze", "front": "GRANT, REVOKE처럼 권한을 관리하는 명령어 분류는 ___이다.", "back": "DCL", "tags": [], "verified": false },
+  { "id": "u18-choice-002", "unitId": "u18", "type": "choice", "front": "COMMIT, ROLLBACK, SAVEPOINT는 어느 분류에 속하는가?", "choices": ["DML", "DDL", "DCL", "TCL"], "answer": "4", "tags": [], "verified": false }
+]
