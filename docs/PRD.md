@@ -294,6 +294,7 @@ MVP(P0)는 "카드 학습 + 간격 반복 + 진행률 + Android·PC 설치(PWA)"
 | 차트 | Recharts | 통계 화면 일별 학습량·정답률 |
 | PWA | vite-plugin-pwa | 홈 화면 설치, 오프라인 사용 |
 | 테스트 | Vitest | Leitner 박스 이동·세션 구성 로직 단위 테스트 |
+| E2E 테스트 | Playwright | Stage 8 모바일·PC 스모크 테스트(핵심 사용자 흐름 통합 검증) |
 | 배포 | GitHub Pages 또는 Vercel (개인 계정) | 무료 정적 호스팅. 회사 AWS 계정은 사용하지 않음 |
 | 개발 도구 | Claude Code | PRD 기반 단계별 구현 |
 

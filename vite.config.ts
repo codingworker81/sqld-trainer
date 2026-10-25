@@ -1,5 +1,5 @@
-/// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
+import { configDefaults } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -45,10 +45,12 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Pre-cache the app shell plus content that doesn't exist yet
-        // (Stage 3/7 cards and summaries) so later stages don't need to
-        // revisit this config (docs/decisions.md #8).
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest,json,md}'],
+        // Stage 8 재검증(docs/decisions.md #8): 카드 JSON·요약 MD는
+        // import.meta.glob({ eager: true })로 index-*.js에 정적으로
+        // 인라인되어 별도 .json/.md 파일로 나오지 않으므로(dist 확인됨),
+        // 그 확장자는 globPatterns에 둘 필요가 없다 — 앱 셸(index.js 등)이
+        // 사전 캐시되면 콘텐츠도 함께 캐시된다.
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
       },
     }),
   ],
@@ -56,6 +58,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     css: true,
+    // e2e/*.spec.ts는 Playwright 전용(Stage 8)이라 Vitest의 기본
+    // *.spec.ts 패턴에 걸려 같이 실행되지 않도록 제외한다.
+    exclude: [...configDefaults.exclude, 'e2e/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],

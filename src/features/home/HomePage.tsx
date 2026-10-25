@@ -39,7 +39,7 @@ export default function HomePage() {
             className="mt-4 min-h-11 w-full rounded-xl bg-blue-600 px-4 py-4 text-left text-white hover:bg-blue-700"
           >
             <div className="text-lg font-bold">오늘의 복습 {data.reviewCount + data.newCount}장 시작</div>
-            <div className="mt-1 text-sm text-blue-100">
+            <div className="mt-1 text-sm text-blue-50">
               복습 {data.reviewCount} · 신규 {data.newCount}
             </div>
           </button>

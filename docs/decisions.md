@@ -13,7 +13,7 @@ Oct 24, 2026 검토 (Stage 0)
 | 5 | Leitner 엔진 재출제 규칙 (F-02, PRD 6절) | "세션 내 틀림 카드는 3~5장 뒤 재출제, 맞혀도 Box 1에 머문다"는 규칙이 Box 1 카드 전용인지, 더 높은 Box에서 틀려 Box 1로 떨어진 카드도 포함하는지 불명확 | 재출제(requeue)된 카드는 Box 값과 무관하게 "같은 세션 내에서는 Box를 전진시키지 않는다". 실제 Box 승급은 해당 카드를 다음 날 이후 세션에서 다시 평가할 때만 반영 |
 | 6 | 신규 카드 수 공식 (PRD 6절, Stage4) | "11/8까지 남은 학습일 수"의 정의(주말 포함 여부, 오늘 포함 여부)가 명시되지 않음 | 평일·주말 구분 없이 캘린더 일수로 계산하고 오늘을 포함: `남은 학습일 = 11/8 - today + 1` (일 단위), 결과가 0 이하면 1로 보정 |
 | 7 | Card 스키마 order 타입 (PRD 8절, Stage3) | `answer`가 "정답 순서 배열"이라는데 배열 원소가 items의 인덱스인지 항목 텍스트인지 미정 | `items`는 문자열 배열, `answer`는 `items`의 0-based 인덱스로 구성된 배열로 고정 (텍스트 중복 시 모호성 방지) |
-| 8 | PWA 사전 캐시 시점 (Stage2, 10/25) vs 콘텐츠 생성 시점 (Stage3, 10/26) | Stage2에서 카드 JSON·요약 MD까지 사전 캐시하도록 요구하지만, 이 시점에는 src/content/cards, summaries가 아직 존재하지 않음 | Stage2에서는 workbox 캐시 패턴을 글롭(`**/*.{json,md}` 등)으로만 설정해 추후 생성되는 파일이 자동 포함되게 하고, Stage8 완료 확인 사항에 "콘텐츠 캐시 실제 포함 여부 재검증" 항목을 추가 |
+| 8 | PWA 사전 캐시 시점 (Stage2, 10/25) vs 콘텐츠 생성 시점 (Stage3, 10/26) | Stage2에서 카드 JSON·요약 MD까지 사전 캐시하도록 요구하지만, 이 시점에는 src/content/cards, summaries가 아직 존재하지 않음 | Stage2에서는 workbox 캐시 패턴을 글롭(`**/*.{json,md}` 등)으로만 설정해 추후 생성되는 파일이 자동 포함되게 하고, Stage8 완료 확인 사항에 "콘텐츠 캐시 실제 포함 여부 재검증" 항목을 추가. **Stage8 재검증 결과(10/25)**: `src/content/index.ts`가 `import.meta.glob(..., { eager: true })`로 카드 JSON·요약 MD를 빌드 시점에 `index-*.js`에 정적으로 인라인하므로, dist에는 별도 .json/.md 파일이 생기지 않음(확인: `find dist` 결과에 .json/.md 없음). 콘텐츠는 앱 셸 JS와 함께 이미 사전 캐시되어 있어 기능적으로 문제 없음 — `globPatterns`의 `json,md` 확장자만 불필요해 제거(vite.config.ts) |
 | 9 | 호환성 요구사항 (PRD 9절) vs 대상 사용자(3절)·기기별 검증(12절) | 9절은 iOS Safari까지 호환 대상으로 명시하지만 실제 사용자는 Android+PC만 사용하고, 12절 기기별 검증 항목에도 iOS가 없음 | 9절 호환성 요구사항에서 iOS Safari를 제외하고 "최신 Chrome(PC), Android Chrome"으로 한정. iOS 지원은 범위 외로 명시 |
 
 ## 2. Stage 진행 순서 위험 요소
@@ -22,3 +22,9 @@ Oct 24, 2026 검토 (Stage 0)
 - **Stage7(카드 제작)과 Stage3~6(개발) 리소스 경쟁**: 같은 평일 저녁 시간을 나눠 써야 해서 개발 일정이 하루라도 밀리면 카드 제작 시간이 그만큼 줄어든다. 안전 마진이 거의 없다.
 - **Stage3 샘플 카드와 Stage7 실제 카드의 관계 미정**: 같은 u03.json 파일을 Stage3(샘플 10장)과 Stage7(실제 70장)이 모두 다룬다. → Stage3 샘플은 `src/content/cards/_sample.json`(검증 스크립트 테스트 전용, 빌드 포함 대상 아님)으로 분리하고, Stage7에서 실제 `u03.json`을 새로 생성한다.
 - **Oracle 결과 검증(verified:true) 작업량 과소평가 위험**: predict류 카드 다수를 Oracle Live SQL에서 직접 실행해 검증해야 하지만 소요 시간이 일정에 반영되어 있지 않다. 높음 비중 단원부터 검증을 우선하고, 11/1까지 못 끝낸 단원은 verified:false로 두고 학습에 활용하면서 사후 보완한다.
+
+## 3. Stage 8 추가 결정
+
+| # | 관련 영역 | 내용 | 결정안 |
+| --- | --- | --- | --- |
+| 10 | 기술 스택 추가 (PRD 9절, CLAUDE.md 규칙8) | Stage8 개발 프롬프트가 모바일·PC 스모크 테스트를 Playwright로 작성하도록 지시하는데, PRD 9절에는 Vitest만 있고 Playwright가 없음 | 사용자 확인 후 devDependency로 Playwright 추가, PRD 9절 기술 스택 표에 "E2E 테스트 | Playwright" 행 추가. Vitest는 그대로 단위 테스트 전담, Playwright는 Stage8 스모크 테스트 전용으로 역할 분리 |
