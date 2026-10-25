@@ -1,0 +1,23 @@
+[
+  { "id": "u14-dml-001", "unitId": "u14", "type": "definition", "front": "INSERT INTO table SELECT * FROM other_table; 의 특징은?", "back": "서브쿼리 결과를 그대로 여러 행 한 번에 삽입하는 다중 행 삽입이다.", "tags": [], "verified": false },
+  { "id": "u14-dml-002", "unitId": "u14", "type": "cloze", "front": "하나의 SELECT 결과를 여러 테이블에 나눠 삽입할 때는 INSERT ___을 쓴다.", "back": "ALL", "tags": [], "verified": false },
+  { "id": "u14-dml-003", "unitId": "u14", "type": "ox", "front": "UPDATE문에서 WHERE절을 빠뜨리면 테이블의 모든 행이 바뀐다.", "answer": "O", "tags": ["trap"], "verified": false },
+  { "id": "u14-dml-004", "unitId": "u14", "type": "predict", "front": "100개 행이 있는 테이블에서 DELETE FROM emp; (WHERE절 없음)을 실행한 직후 남은 행 수는?", "back": "0", "explanation": "WHERE절이 없으면 테이블의 모든 행이 삭제된다.", "tags": ["trap"], "verified": false },
+  { "id": "u14-dml-005", "unitId": "u14", "type": "predict", "front": "5개 행이 있는 테이블에서 UPDATE emp SET sal = sal * 1.1; (WHERE절 없음)을 실행하면 몇 개 행의 sal이 바뀌는가?", "back": "5", "explanation": "WHERE절이 없으면 모든 행이 대상이 된다.", "tags": ["trap"], "verified": false },
+  { "id": "u14-dml-006", "unitId": "u14", "type": "definition", "front": "MERGE문은 무엇을 하는 명령어인가?", "back": "USING ... ON 조건으로 매칭 여부에 따라 INSERT/UPDATE(Oracle은 DELETE도 가능)를 한 문장으로 처리하는 upsert 명령어다.", "tags": [], "verified": false },
+  { "id": "u14-dml-007", "unitId": "u14", "type": "cloze", "front": "MERGE문에서 매칭되지 않는 행을 새로 추가할 때는 WHEN NOT MATCHED THEN ___을 쓴다.", "back": "INSERT", "tags": [], "verified": false },
+  { "id": "u14-dml-008", "unitId": "u14", "type": "cloze", "front": "MERGE문에서 매칭되는 행을 갱신할 때는 WHEN MATCHED THEN ___을 쓴다.", "back": "UPDATE", "tags": [], "verified": false },
+  { "id": "u14-dml-009", "unitId": "u14", "type": "choice", "front": "다음 중 한 문장으로 INSERT와 UPDATE를 모두 처리할 수 있는 명령어는?", "choices": ["INSERT ALL", "MERGE", "UPDATE", "DELETE"], "answer": "2", "tags": [], "verified": false },
+  { "id": "u14-dml-010", "unitId": "u14", "type": "order", "front": "MERGE문을 작성하는 순서대로 배열하시오.", "items": ["MERGE INTO 대상테이블", "USING 원본 ON 조건", "WHEN MATCHED/NOT MATCHED THEN ..."], "answer": [0, 1, 2], "tags": [], "verified": false },
+
+  { "id": "u14-dtd-001", "unitId": "u14", "type": "definition", "front": "DELETE, TRUNCATE, DROP 중 DML로 분류되는 것은?", "back": "DELETE만 DML이다. TRUNCATE와 DROP은 DDL이다.", "tags": [], "verified": false },
+  { "id": "u14-dtd-002", "unitId": "u14", "type": "ox", "front": "TRUNCATE는 DML이 아니라 DDL이다.", "answer": "O", "tags": ["trap"], "verified": false },
+  { "id": "u14-dtd-003", "unitId": "u14", "type": "ox", "front": "TRUNCATE는 실행 후 ROLLBACK으로 되돌릴 수 있다.", "answer": "X", "explanation": "TRUNCATE는 자동 커밋되어 롤백할 수 없다.", "tags": ["trap"], "verified": false },
+  { "id": "u14-dtd-004", "unitId": "u14", "type": "ox", "front": "DELETE는 WHERE절로 일부 행만 삭제할 수 있지만 TRUNCATE는 테이블 전체 행만 삭제할 수 있다.", "answer": "O", "tags": [], "verified": false },
+  { "id": "u14-dtd-005", "unitId": "u14", "type": "choice", "front": "다음 중 실행 즉시 자동 커밋되어 롤백할 수 없는 명령어는?", "choices": ["DELETE", "TRUNCATE", "SELECT", "UPDATE"], "answer": "2", "tags": ["trap"], "verified": false },
+  { "id": "u14-dtd-006", "unitId": "u14", "type": "ox", "front": "TRUNCATE는 트리거를 발생시킨다.", "answer": "X", "explanation": "TRUNCATE는 트리거를 발생시키지 않는다.", "tags": [], "verified": false },
+  { "id": "u14-dtd-007", "unitId": "u14", "type": "definition", "front": "TRUNCATE와 DROP의 공통점과 차이점은?", "back": "둘 다 DDL이고 자동 커밋되어 롤백할 수 없다. 차이는 TRUNCATE는 테이블 구조를 남기고 데이터만 지우지만, DROP은 테이블 자체(구조+데이터)를 삭제한다는 점이다.", "tags": [], "verified": false },
+  { "id": "u14-dtd-008", "unitId": "u14", "type": "choice", "front": "테이블 구조는 남기고 데이터만 빠르게 전부 지우는 명령어는?", "choices": ["DELETE", "TRUNCATE", "DROP", "UPDATE"], "answer": "2", "tags": [], "verified": false },
+  { "id": "u14-dtd-009", "unitId": "u14", "type": "ox", "front": "DELETE는 행 단위로 처리되어 TRUNCATE보다 일반적으로 느리다.", "answer": "O", "tags": [], "verified": false },
+  { "id": "u14-dtd-010", "unitId": "u14", "type": "predict", "front": "100개 행이 있는 테이블에서 TRUNCATE TABLE emp; 를 실행한 직후 테이블의 행 수는?", "back": "0", "explanation": "TRUNCATE는 전체 행을 즉시 삭제하며 자동 커밋된다.", "tags": ["trap"], "verified": false }
+]
