@@ -1,0 +1,12 @@
+[
+  { "id": "u10-rownum-001", "unitId": "u10", "type": "definition", "front": "ROWNUM은 언제, 어떤 순서로 번호가 매겨지는가?", "back": "결과가 만들어지는 순서대로 1부터 부여되는 pseudo 컬럼이다.", "tags": [], "verified": false },
+  { "id": "u10-rownum-002", "unitId": "u10", "type": "ox", "front": "ORDER BY로 정렬하기 전에 WHERE ROWNUM 조건을 걸면 정렬 전 순서 기준으로 번호가 매겨진다.", "answer": "O", "tags": ["trap"], "verified": false },
+  { "id": "u10-rownum-003", "unitId": "u10", "type": "predict", "front": "SELECT v FROM (\n  SELECT v FROM (\n    SELECT 30 v FROM DUAL UNION ALL SELECT 10 v FROM DUAL UNION ALL SELECT 20 v FROM DUAL\n  )\n  ORDER BY v DESC\n)\nWHERE ROWNUM <= 2;", "back": "30, 20", "explanation": "정렬된 결과를 서브쿼리로 감싼 뒤 바깥에서 ROWNUM 조건을 걸어야 올바른 Top-N이 된다.", "tags": ["oracle", "trap"], "verified": false },
+  { "id": "u10-rownum-004", "unitId": "u10", "type": "ox", "front": "WHERE ROWNUM > 1 조건은 결과가 항상 0건이다.", "answer": "O", "tags": ["trap"], "verified": false },
+  { "id": "u10-rownum-005", "unitId": "u10", "type": "predict", "front": "SELECT COUNT(*) FROM (\n  SELECT 10 v FROM DUAL UNION ALL SELECT 20 v FROM DUAL UNION ALL SELECT 30 v FROM DUAL\n)\nWHERE ROWNUM > 1;", "back": "0", "explanation": "첫 행(ROWNUM=1)에서 조건이 거짓이 되고, 그 뒤 행들은 번호 자체가 할당되지 않아 전체 결과가 0건이 된다.", "tags": ["oracle", "trap"], "verified": false },
+  { "id": "u10-fetch-001", "unitId": "u10", "type": "definition", "front": "FETCH FIRST n ROWS ONLY는 Oracle 몇 버전부터 지원하는가?", "back": "Oracle 12c부터 지원한다.", "tags": [], "verified": false },
+  { "id": "u10-fetch-002", "unitId": "u10", "type": "predict", "front": "SELECT v FROM (\n  SELECT 30 v FROM DUAL UNION ALL SELECT 10 v FROM DUAL UNION ALL SELECT 20 v FROM DUAL\n)\nORDER BY v DESC\nFETCH FIRST 2 ROWS ONLY;", "back": "30, 20", "tags": ["oracle"], "verified": false },
+  { "id": "u10-fetch-003", "unitId": "u10", "type": "cloze", "front": "동점까지 포함해 Top-N을 뽑으려면 FETCH FIRST n ROWS ___를 쓴다.", "back": "WITH TIES", "tags": [], "verified": false },
+  { "id": "u10-fetch-004", "unitId": "u10", "type": "choice", "front": "다음 중 FETCH FIRST n ROWS와 함께 써서 시작 위치(건너뛸 행 수)를 지정하는 절은?", "choices": ["OFFSET", "ROWNUM", "WHERE", "PARTITION BY"], "answer": "1", "tags": [], "verified": false },
+  { "id": "u10-fetch-005", "unitId": "u10", "type": "dbms", "front": "Oracle의 FETCH FIRST n ROWS ONLY는 SQL Server에서 어떻게 쓰는가?", "back": "SQL Server는 TOP n(WITH TIES 가능)을 쓰거나, 2012 이상에서는 OFFSET ... FETCH NEXT n ROWS ONLY를 쓴다.", "tags": ["mssql"], "verified": false }
+]
